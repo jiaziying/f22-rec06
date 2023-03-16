@@ -1,7 +1,6 @@
 package drawing.shapes;
 
-import drawing.writing.JPEGWriter;
-import drawing.writing.PNGWriter;
+import drawing.formatting.Formatter;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -23,15 +22,11 @@ public interface Shape {
     /**
      * Draws lines to file.
      */
-    default void draw(Writer writer, Line[] lines) {
+    default void draw(Writer writer, Formatter formatter) throws IOException {
+        Line[] lines = this.toLines();
         try {
             for (Line line : lines) {
-                // TODO: what is the purpose of the code there?
-                if (writer instanceof JPEGWriter) {
-                    writer.write(line.toJPEG());
-                } else if (writer instanceof PNGWriter) {
-                    writer.write(line.toPNG());
-                }
+                writer.write(formatter.format(line));
             }
         } catch (IOException e) {
             e.printStackTrace();
